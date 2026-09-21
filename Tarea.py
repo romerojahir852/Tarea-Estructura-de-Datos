@@ -381,3 +381,512 @@ class AnalizadorPatrones:
 
     def palabras_unicas(self, texto):
         return set(texto.split())
+
+# Ej. 1: Registro de asistencia
+class RegistroAsistencia:
+    def __init__(self):
+        self.asistencias = {}
+
+    def registrar(self, alumno, presente):
+        if alumno not in self.asistencias:
+            self.asistencias[alumno] = []
+        self.asistencias[alumno].append(presente)
+
+    def porcentaje_asistencia(self, alumno):
+        if alumno not in self.asistencias:
+            return 0
+        registros = self.asistencias[alumno]
+        return (sum(registros) / len(registros)) * 100
+
+    def alumnos_regulares(self, minimo_porcentaje):
+        return [alumno for alumno in self.asistencias 
+                if self.porcentaje_asistencia(alumno) >= minimo_porcentaje]
+
+# Ej. 2: Conversor de unidades
+class ConversorUnidades:
+    def __init__(self):
+        self.historial_conversiones = []
+
+    def km_a_millas(self, km):
+        resultado = km * 0.621371
+        self.historial_conversiones.append(('km_a_millas', km, resultado))
+        return resultado
+
+    def celsius_a_fahrenheit(self, celsius):
+        resultado = (celsius * 9/5) + 32
+        self.historial_conversiones.append(('celsius_a_fahrenheit', celsius, resultado))
+        return resultado
+
+    def kg_a_libras(self, kg):
+        resultado = kg * 2.20462
+        self.historial_conversiones.append(('kg_a_libras', kg, resultado))
+        return resultado
+
+    def total_conversiones(self):
+        return len(self.historial_conversiones)
+
+# Ej. 3: Calculadora de propinas
+class CalculadoraPropinas:
+    def __init__(self):
+        self.cuentas = []
+
+    def agregar_cuenta(self, monto):
+        self.cuentas.append(monto)
+
+    def calcular_propina(self, monto, porcentaje):
+        return monto * (porcentaje / 100)
+
+    def total_con_propinas(self, porcentaje):
+        total = 0
+        for cuenta in self.cuentas:
+            total += cuenta + self.calcular_propina(cuenta, porcentaje)
+        return total
+
+    def cuenta_mas_alta(self):
+        if not self.cuentas:
+            return None
+        return max(self.cuentas)
+
+# Ej. 4: Organizador de contactos
+class AgendaContactos:
+    def __init__(self):
+        self.contactos = {}
+
+    def agregar_contacto(self, nombre, telefono):
+        self.contactos[nombre] = telefono
+
+    def buscar_contacto(self, nombre):
+        return self.contactos.get(nombre, "No encontrado")
+
+    def eliminar_contacto(self, nombre):
+        if nombre in self.contactos:
+            del self.contactos[nombre]
+            return True
+        return False
+
+    def contactos_por_letra(self, letra):
+        return [nombre for nombre in self.contactos if nombre.startswith(letra.upper())]
+
+# Ej. 5: Clasificador de números primos y compuestos
+class ClasificadorPrimos:
+    def __init__(self):
+        self.primos = []
+        self.compuestos = []
+
+    def es_primo(self, numero):
+        if numero < 2:
+            return False
+        for i in range(2, int(numero**0.5) + 1):
+            if numero % i == 0:
+                return False
+        return True
+
+    def clasificar(self, *numeros):
+        for num in numeros:
+            if self.es_primo(num):
+                self.primos.append(num)
+            else:
+                self.compuestos.append(num)
+        return {'primos': self.primos, 'compuestos': self.compuestos}
+
+    def cantidad_primos(self):
+        return len(self.primos)
+
+# Ej. 6: Gestor de calificaciones por materia
+class GestorMaterias:
+    def __init__(self):
+        self.materias = {}
+
+    def agregar_materia(self, nombre_materia):
+        if nombre_materia not in self.materias:
+            self.materias[nombre_materia] = []
+
+    def agregar_calificacion(self, materia, calificacion):
+        if materia in self.materias:
+            self.materias[materia].append(calificacion)
+
+    def promedio_materia(self, materia):
+        notas = self.materias.get(materia, [])
+        if not notas:
+            return 0
+        return sum(notas) / len(notas)
+
+    def materia_mejor_promedio(self):
+        if not self.materias:
+            return None
+        return max(self.materias, key=lambda m: self.promedio_materia(m))
+
+# Ej. 7: Verificador de palíndromos
+class VerificadorPalindromo:
+    def __init__(self):
+        self.palindromos_encontrados = []
+
+    def limpiar_texto(self, texto):
+        limpio = ""
+        for char in texto.lower():
+            if char.isalnum():
+                limpio += char
+        return limpio
+
+    def es_palindromo(self, texto):
+        limpio = self.limpiar_texto(texto)
+        resultado = limpio == limpio[::-1]
+        if resultado:
+            self.palindromos_encontrados.append(texto)
+        return resultado
+
+    def verificar_multiples(self, *textos):
+        resultados = {}
+        for texto in textos:
+            resultados[texto] = self.es_palindromo(texto)
+        return resultados
+
+# Ej. 8: Control de gastos mensuales
+class ControlGastos:
+    def __init__(self):
+        self.gastos = {}
+
+    def registrar_gasto(self, categoria, monto):
+        if categoria not in self.gastos:
+            self.gastos[categoria] = []
+        self.gastos[categoria].append(monto)
+
+    def total_por_categoria(self, categoria):
+        return sum(self.gastos.get(categoria, []))
+
+    def gasto_total(self):
+        total = 0
+        for montos in self.gastos.values():
+            total += sum(montos)
+        return total
+
+    def categoria_mayor_gasto(self):
+        if not self.gastos:
+            return None
+        return max(self.gastos, key=lambda c: sum(self.gastos[c]))
+
+# Ej. 9: Generador de tabla de multiplicar
+class TablaMultiplicar:
+    def __init__(self):
+        self.tablas_generadas = {}
+
+    def generar_tabla(self, numero, hasta=10):
+        tabla = []
+        for i in range(1, hasta + 1):
+            tabla.append((numero, i, numero * i))
+        self.tablas_generadas[numero] = tabla
+        return tabla
+
+    def buscar_resultado(self, numero, multiplicador):
+        return numero * multiplicador
+
+    def generar_multiples_tablas(self, *numeros):
+        for num in numeros:
+            self.generar_tabla(num)
+        return self.tablas_generadas
+
+# Ej. 10: Registro de libros con búsqueda
+class Biblioteca:
+    def __init__(self):
+        self.libros = []
+
+    def agregar_libro(self, titulo, autor, anio):
+        self.libros.append({'titulo': titulo, 'autor': autor, 'anio': anio})
+
+    def buscar_por_autor(self, autor):
+        return [libro for libro in self.libros if libro['autor'] == autor]
+
+    def libros_recientes(self, anio_minimo):
+        return [libro for libro in self.libros if libro['anio'] >= anio_minimo]
+
+    def libro_mas_antiguo(self):
+        if not self.libros:
+            return None
+        return min(self.libros, key=lambda l: l['anio'])
+
+# Ej. 11: Calculadora de estadísticas
+class CalculadoraEstadisticas:
+    def __init__(self):
+        self.datos = []
+
+    def agregar_datos(self, *valores):
+        for v in valores:
+            self.datos.append(v)
+
+    def media(self):
+        if not self.datos:
+            return 0
+        return sum(self.datos) / len(self.datos)
+
+    def mediana(self):
+        if not self.datos:
+            return 0
+        ordenados = sorted(self.datos)
+        n = len(ordenados)
+        if n % 2 == 0:
+            return (ordenados[n//2 - 1] + ordenados[n//2]) / 2
+        else:
+            return ordenados[n//2]
+
+    def rango(self):
+        if not self.datos:
+            return 0
+        return max(self.datos) - min(self.datos)
+
+# Ej. 12: Conversor de bases numéricas
+class ConversorBases:
+    def __init__(self):
+        self.conversiones = []
+
+    def decimal_a_binario(self, numero):
+        resultado = bin(numero)[2:]
+        self.conversiones.append(('decimal', 'binario', numero, resultado))
+        return resultado
+
+    def decimal_a_octal(self, numero):
+        resultado = oct(numero)[2:]
+        self.conversiones.append(('decimal', 'octal', numero, resultado))
+        return resultado
+
+    def decimal_a_hexadecimal(self, numero):
+        resultado = hex(numero)[2:].upper()
+        self.conversiones.append(('decimal', 'hexadecimal', numero, resultado))
+        return resultado
+
+    def convertir_multiples(self, *numeros):
+        resultados = {}
+        for num in numeros:
+            resultados[num] = {
+                'binario': self.decimal_a_binario(num),
+                'octal': self.decimal_a_octal(num),
+                'hexadecimal': self.decimal_a_hexadecimal(num)
+            }
+        return resultados
+
+# Ej. 13: Simulador de dados
+class SimuladorDados:
+    def __init__(self):
+        self.historial_tiradas = []
+
+    def tirar_dado(self, caras=6):
+        import random
+        resultado = random.randint(1, caras)
+        self.historial_tiradas.append(resultado)
+        return resultado
+
+    def tirar_multiples(self, cantidad, caras=6):
+        tiradas = []
+        for i in range(cantidad):
+            tiradas.append(self.tirar_dado(caras))
+        return tiradas
+
+    def frecuencia_resultados(self):
+        frecuencias = {}
+        for tirada in self.historial_tiradas:
+            if tirada in frecuencias:
+                frecuencias[tirada] += 1
+            else:
+                frecuencias[tirada] = 1
+        return frecuencias
+
+    def promedio_tiradas(self):
+        if not self.historial_tiradas:
+            return 0
+        return sum(self.historial_tiradas) / len(self.historial_tiradas)
+
+# Ej. 14: Gestor de contraseñas
+class ValidadorPassword:
+    def __init__(self):
+        self.passwords_validadas = []
+
+    def tiene_mayuscula(self, password):
+        for char in password:
+            if char.isupper():
+                return True
+        return False
+
+    def tiene_numero(self, password):
+        for char in password:
+            if char.isdigit():
+                return True
+        return False
+
+    def validar_password(self, password):
+        es_valida = (len(password) >= 8 and 
+                     self.tiene_mayuscula(password) and 
+                     self.tiene_numero(password))
+        if es_valida:
+            self.passwords_validadas.append(password)
+        return es_valida
+
+    def validar_multiples(self, *passwords):
+        resultados = {}
+        for p in passwords:
+            resultados[p] = self.validar_password(p)
+        return resultados
+
+# Ej. 15: Calculadora de áreas
+class CalculadoraAreas:
+    def __init__(self):
+        self.areas_calculadas = []
+
+    def area_circulo(self, radio):
+        import math
+        area = math.pi * radio ** 2
+        self.areas_calculadas.append(('circulo', area))
+        return area
+
+    def area_rectangulo(self, base, altura):
+        area = base * altura
+        self.areas_calculadas.append(('rectangulo', area))
+        return area
+
+    def area_triangulo(self, base, altura):
+        area = (base * altura) / 2
+        self.areas_calculadas.append(('triangulo', area))
+        return area
+
+    def area_total(self):
+        total = 0
+        for figura, area in self.areas_calculadas:
+            total += area
+        return total
+
+# Ej. 16: Organizador de playlist
+class PlaylistMusical:
+    def __init__(self):
+        self.canciones = []
+
+    def agregar_cancion(self, titulo, artista, duracion):
+        self.canciones.append({'titulo': titulo, 'artista': artista, 'duracion': duracion})
+
+    def duracion_total(self):
+        total = 0
+        for cancion in self.canciones:
+            total += cancion['duracion']
+        return total
+
+    def canciones_por_artista(self, artista):
+        return [c for c in self.canciones if c['artista'] == artista]
+
+    def cancion_mas_larga(self):
+        if not self.canciones:
+            return None
+        return max(self.canciones, key=lambda c: c['duracion'])
+
+# Ej. 17: Contador de vocales y consonantes por palabra
+class AnalizadorPalabras:
+    def __init__(self):
+        self.analisis_realizados = {}
+
+    def contar_vocales(self, palabra):
+        contador = 0
+        for letra in palabra.lower():
+            if letra in 'aeiou':
+                contador += 1
+        return contador
+
+    def contar_consonantes(self, palabra):
+        contador = 0
+        for letra in palabra.lower():
+            if letra.isalpha() and letra not in 'aeiou':
+                contador += 1
+        return contador
+
+    def analizar_palabra(self, palabra):
+        resultado = {
+            'vocales': self.contar_vocales(palabra),
+            'consonantes': self.contar_consonantes(palabra),
+            'longitud': len(palabra)
+        }
+        self.analisis_realizados[palabra] = resultado
+        return resultado
+
+    def palabra_mas_vocales(self):
+        if not self.analisis_realizados:
+            return None
+        return max(self.analisis_realizados, 
+                   key=lambda p: self.analisis_realizados[p]['vocales'])
+
+# Ej. 18: Sistema de votación
+class SistemaVotacion:
+    def __init__(self):
+        self.votos = {}
+        self.votantes = set()
+
+    def registrar_candidato(self, candidato):
+        if candidato not in self.votos:
+            self.votos[candidato] = 0
+
+    def votar(self, votante, candidato):
+        if votante in self.votantes:
+            return False
+        if candidato in self.votos:
+            self.votos[candidato] += 1
+            self.votantes.add(votante)
+            return True
+        return False
+
+    def ganador(self):
+        if not self.votos:
+            return None
+        return max(self.votos, key=self.votos.get)
+
+    def total_votos(self):
+        return sum(self.votos.values())
+
+# Ej. 19: Historial de movimientos bancarios
+class CuentaBancaria:
+    def __init__(self, saldo_inicial=0):
+        self.saldo = saldo_inicial
+        self.movimientos = []
+
+    def depositar(self, monto):
+        self.saldo += monto
+        self.movimientos.append(('deposito', monto))
+
+    def retirar(self, monto):
+        if monto <= self.saldo:
+            self.saldo -= monto
+            self.movimientos.append(('retiro', monto))
+            return True
+        return False
+
+    def ultimos_movimientos(self, cantidad):
+        return self.movimientos[-cantidad:]
+
+    def total_depositos(self):
+        total = 0
+        for tipo, monto in self.movimientos:
+            if tipo == 'deposito':
+                total += monto
+        return total
+
+# Ej. 20: Comparador de conjuntos
+class OperacionesConjuntos:
+    def __init__(self):
+        self.conjuntos = {}
+
+    def crear_conjunto(self, nombre, *elementos):
+        self.conjuntos[nombre] = set(elementos)
+
+    def union(self, nombre1, nombre2):
+        c1 = self.conjuntos.get(nombre1, set())
+        c2 = self.conjuntos.get(nombre2, set())
+        return c1 | c2
+
+    def interseccion(self, nombre1, nombre2):
+        c1 = self.conjuntos.get(nombre1, set())
+        c2 = self.conjuntos.get(nombre2, set())
+        return c1 & c2
+
+    def diferencia(self, nombre1, nombre2):
+        c1 = self.conjuntos.get(nombre1, set())
+        c2 = self.conjuntos.get(nombre2, set())
+        return c1 - c2
+
+    def elementos_unicos_totales(self):
+        todos = set()
+        for conjunto in self.conjuntos.values():
+            todos.update(conjunto)
+        return todos
